@@ -7,6 +7,7 @@ add_compile_options(-std=c++17 -O3)
 find_package(MPI REQUIRED)
 find_package(OpenMP REQUIRED)
 
-add_executable(project1 main.cpp utils.cpp zeta0/serialZeta.cpp mach0/serialMach.cpp)
+add_executable(project1 main.cpp utils.cpp zeta0/serialZeta.cpp mach0/serialMach.cpp
+zeta1/MPIZeta.cpp mach1/MPIMach.cpp)
 
 target_link_libraries(project1 OpenMP::OpenMP_CXX ${MPI_LIBRARIES})
