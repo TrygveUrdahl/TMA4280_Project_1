@@ -1,5 +1,7 @@
 #include <iostream>
 #include <math.h>
+#include <vector>
+#include "../utils.hpp"
 
 double machin(double x, int i) {
   double result = 1;
@@ -16,4 +18,24 @@ double serialMach(int n) {
   }
   result *= 4;
   return result;
+}
+
+double unitTestSerialMach(int n = 3) {
+  double err;
+  double pi = serialMach(n);
+  err = abs(M_PI - pi);
+  return err;
+}
+
+std::vector<double> verificationTestSerialMach() {
+  std::vector<double> errVec;
+  errVec.reserve(24);
+  for (int k = 1; k <= 24; ++k) {
+    int n = pow(k, 2);
+    double pi = serialMach(n);
+    double err = abs(M_PI - pi);
+    errVec.push_back(err);
+  }
+  writeVectorToFile(errVec, "../output/errorMach.txt");
+  return errVec;
 }
