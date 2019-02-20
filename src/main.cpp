@@ -13,9 +13,12 @@ int main(int argc, char** argv) {
     return 1;
   }
   int n = atoi(argv[1]);
-  std::cout << "Error in pi: " << unitTestSerialZeta() << std::endl;
 
-  verificationTestSerialMach();
-  verificationTestSerialZeta();
+
+  // unitTestSerialMach() // Q2
+  // unitTestSerialZeta() // Q2
+
+  //verificationTestSerialMach(); // Q3
+  //verificationTestSerialZeta(); // Q3
   return 0;
 }
