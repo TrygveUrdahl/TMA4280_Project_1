@@ -6,6 +6,10 @@
 #include "mach0/serialMach.hpp"
 #include "zeta1/MPIZeta.hpp"
 #include "mach1/MPIMach.hpp"
+#include "zeta2/MPIZeta2.hpp"
+#include "mach2/MPIMach2.hpp"
+#include "zeta3/ompZeta.hpp"
+#include "mach3/ompMach.hpp"
 
 int main(int argc, char** argv) {
   MPI_Init(&argc, &argv);
@@ -34,6 +38,9 @@ int main(int argc, char** argv) {
 
 
   std::cout << "Rank: "<< rank <<". MPIZetaScatterReduce: " << MPIZetaScatterReduce(n, rank, size, myComm) << std::endl;
+
+  //std::cout << "OpenMP with Mach: " << ompMach(n) << std::endl; // Q7
+  //std::cout << "OpenMP with Zeta: " << ompZeta(n) << std::endl; // Q7
   MPI_Finalize();
   return 0;
 }
