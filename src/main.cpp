@@ -36,8 +36,8 @@ int main(int argc, char** argv) {
   //verificationTestSerialMach(); // Q3
   //verificationTestSerialZeta(); // Q3
 
-
-  std::cout << "Rank: "<< rank <<". MPIZetaScatterReduce: " << MPIZetaScatterReduce(n, rank, size, myComm) << std::endl;
+  double val =  MPIZetaScatterReduce(n, rank, size, myComm);
+  std::cout << "Rank: "<< rank <<". MPIZetaScatterReduce: " << val << std::endl;
 
   //std::cout << "OpenMP with Mach: " << ompMach(n) << std::endl; // Q7
   //std::cout << "OpenMP with Zeta: " << ompZeta(n) << std::endl; // Q7
