@@ -1,0 +1,8 @@
+.DS_Store
+
+# Exclude build files
+build/*
+!build/.gitinclude
+
+output/*
+!output/.gitinclude

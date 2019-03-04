@@ -2,6 +2,7 @@
 #include <math.h>
 #include <vector>
 #include <mpi.h>
+#include <assert.h>
 //#include <omp.h>
 #include "../utils.hpp"
 

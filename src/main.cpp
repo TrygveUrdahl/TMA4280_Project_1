@@ -16,16 +16,21 @@
 int main(int argc, char** argv) {
   MPI_Init(&argc, &argv);
   if (argc < 3){
-    std::cout << "Requires arguments: " << std::endl;
-    std::cout << "\tint: which exercise number to run" << std::endl;
-    std::cout << "\tint: number of iterations to use" << std::endl;
+    std::cout << "Error in program arguments given! " << std::endl;
+    std::cout << "\tMandatory arguments: " << std::endl;
+    std::cout << "\t  int: which exercise number to run" << std::endl;
+    std::cout << "\tVoluntary arguments: " << std::endl;
+    std::cout << "\t  int: number of iterations to use (default 100)" << std::endl;
 
     MPI_Finalize();
     return 1;
   }
 
-  int n = atoi(argv[2]);
+  int n = 100;
   int exercise = atoi(argv[1]);
+  if (argc > 2) {
+    n = atoi(argv[2]);
+  }
 
   MPI_Comm myComm;
   MPI_Comm_dup(MPI_COMM_WORLD, &myComm);
@@ -105,7 +110,7 @@ int main(int argc, char** argv) {
       break;
     }
     case 8: {
-      if (rank == 0) std::cout << "Question 7: " << std::endl;
+      if (rank == 0) std::cout << "Question 8: " << std::endl;
       double zeta, mach;
       if (rank == 0) std::cout << "Hybrid implementation of Zeta and Machin with MPI and OpenMP. " << std::endl;
       zeta = hybridZeta(n, rank, size, myComm);
