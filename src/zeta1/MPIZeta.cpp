@@ -12,7 +12,7 @@ double MPIZetaBcast(int n, int rank, int size, MPI_Comm myComm) {
   if (rank == 0) {
     // Fill values-vector with values from Riemann Zeta
     for (int i = 1; i <= n; ++i) {
-      values.push_back(sqrt(6.0/static_cast<double>(pow(i, 2))));
+      values.push_back(6.0/static_cast<double>(pow(i, 2)));
     }
   }
   MPI_Bcast(values.data(), values.size(), MPI_DOUBLE, 0, myComm);
@@ -20,5 +20,5 @@ double MPIZetaBcast(int n, int rank, int size, MPI_Comm myComm) {
   for (int i = 0; i < values.size(); ++i) {
     result += values.at(i);
   }
-  return result;
+  return sqrt(result);
 }

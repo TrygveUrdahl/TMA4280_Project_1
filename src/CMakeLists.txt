@@ -12,6 +12,6 @@ include_directories(${MPI_INCLUDE_PATH})
 
 add_executable(project1 main.cpp utils.cpp zeta0/serialZeta.cpp mach0/serialMach.cpp
   zeta1/MPIZeta.cpp mach1/MPIMach.cpp zeta2/MPIZeta2.cpp mach2/MPIMach2.cpp
-  zeta3/ompZeta.cpp mach3/ompMach.cpp)
+  zeta3/ompZeta.cpp mach3/ompMach.cpp zeta4/hybridZeta.cpp mach4/hybridMach.cpp)
 
 target_link_libraries(project1 PRIVATE ${MPI_LIBRARIES})

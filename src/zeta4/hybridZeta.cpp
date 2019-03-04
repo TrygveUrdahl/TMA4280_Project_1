@@ -1,11 +1,11 @@
 #include <iostream>
 #include <math.h>
-#include <mpi.h>
 #include <vector>
-#include <assert.h>
+#include <mpi.h>
+//#include <omp.h>
 #include "../utils.hpp"
 
-double MPIZetaScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
+double hybridZeta(int n, int rank, int size, MPI_Comm myComm) {
   std::vector<double> values;
   std::vector<double> scattered;
   scattered.reserve(n/size);
@@ -17,6 +17,7 @@ double MPIZetaScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
 
   if (rank == 0) {
     // Fill values-vector with values from Riemann Zeta
+    #pragma omp parallel for schedule(static)
     for (int i = 1; i <= n; ++i) {
       double value = sqrt(6.0/static_cast<double>(pow(i, 2)));
       values.push_back(value);
@@ -26,6 +27,8 @@ double MPIZetaScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
   MPI_Scatter(values.data(), values.size()/size, MPI_DOUBLE, scattered.data(),
         values.size()/size, MPI_DOUBLE, 0, myComm);
   //std::cout << "value: " << scattered.at(0) << std::endl; // Causes segfault
+
+  #pragma omp parallel for reduction(+:localResult) schedule(static)
   for (int i = 0; i < scattered.size(); ++i) {
     localResult += scattered.at(i);
   }
