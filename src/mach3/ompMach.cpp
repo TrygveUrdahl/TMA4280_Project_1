@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
-#include <omp.h>
+//#include <omp.h>
 #include "../utils.hpp"
 
 inline double machinOmp(double x, int i) {

@@ -27,7 +27,7 @@ double unitTestSerialMach(int n = 3) {
   return err;
 }
 
-std::vector<double> verificationTestSerialMach() {
+std::vector<double> verificationTestSerialMach(std::string outputName = "../output/errorMach.txt") {
   std::vector<double> errVec;
   errVec.reserve(24);
   for (int k = 1; k <= 24; ++k) {
@@ -36,6 +36,6 @@ std::vector<double> verificationTestSerialMach() {
     double err = abs(M_PI - pi);
     errVec.push_back(err);
   }
-  writeVectorToFile(errVec, "../output/errorMach.txt");
+  writeVectorToFile(errVec, outputName);
   return errVec;
 }

@@ -19,7 +19,7 @@ double unitTestSerialZeta(int n = 3) {
   return err;
 }
 
-std::vector<double> verificationTestSerialZeta() {
+std::vector<double> verificationTestSerialZeta(std::string outputName = "../output/errorZeta.txt") {
   std::vector<double> errVec;
   errVec.reserve(24);
   for (int k = 1; k <= 24; ++k) {
@@ -28,6 +28,6 @@ std::vector<double> verificationTestSerialZeta() {
     double err = abs(M_PI - pi);
     errVec.push_back(err);
   }
-  writeVectorToFile(errVec, "../output/errorZeta.txt");
+  writeVectorToFile(errVec, outputName);
   return errVec;
 }

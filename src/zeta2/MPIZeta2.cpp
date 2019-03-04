@@ -19,9 +19,9 @@ double MPIZetaScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
     }
   }
 
-
-  MPI_Scatter(values.data(), values.size()/size, MPI_DOUBLE, scattered.data(), values.size()/size, MPI_DOUBLE, 0, myComm);
-
+  MPI_Scatter(values.data(), values.size()/size, MPI_DOUBLE, scattered.data(),
+        values.size()/size, MPI_DOUBLE, 0, myComm);
+  //std::cout << "value: " << scattered.at(0) << std::endl; // Causes segfault
   for (int i = 0; i < scattered.size(); ++i) {
     localResult += scattered.at(i);
   }
