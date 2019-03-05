@@ -16,7 +16,7 @@ double MPIMachScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
   scattered.reserve(n/size);
   double localResult = 0;
   double result = 0;
-  
+
   // Check that size is a power of two
   assert((size != 0) && ((size &(size - 1)) == 0));
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <mpi.h>
 #include <vector>
+#include <chrono>
 
 #include "zeta0/serialZeta.hpp"
 #include "mach0/serialMach.hpp"
@@ -15,7 +16,7 @@
 
 int main(int argc, char** argv) {
   MPI_Init(&argc, &argv);
-  if (argc < 3){
+  if (argc < 2){
     std::cout << "Error in program arguments given! " << std::endl;
     std::cout << "\tMandatory arguments: " << std::endl;
     std::cout << "\t  int: which exercise number to run" << std::endl;
@@ -38,6 +39,7 @@ int main(int argc, char** argv) {
   int rank, size;
   MPI_Comm_rank(myComm, &rank);
   MPI_Comm_size(myComm, &size);
+
 
   // Selection of which program to run, rank 0 prints to terminal
   switch(exercise) {
@@ -86,11 +88,22 @@ int main(int argc, char** argv) {
       if (rank == 0) std::cout << "Question 5: " << std::endl;
       double zeta, mach;
       if (rank == 0) std::cout << "Simple parallel implementation of Zeta and Machin using MPI Scatter and Reduce" << std::endl;
+      auto startTimeMach = std::chrono::high_resolution_clock::now();
       zeta = MPIMachScatterReduce(n, rank, size, myComm);
+      auto endTimeMach = std::chrono::high_resolution_clock::now();
+      auto startTimeZeta = std::chrono::high_resolution_clock::now();
       mach = MPIZetaScatterReduce(n, rank, size, myComm);
+      auto endTimeZeta = std::chrono::high_resolution_clock::now();
+
+      std::chrono::duration<double> durationMach = endTimeMach - startTimeMach;
+      std::chrono::duration<double> durationZeta = endTimeZeta - startTimeZeta;
+
       if (rank == 0) std::cout << "Returned values for Pi: " << std::endl;
       if (rank == 0) std::cout << "\tZeta: " << zeta << std::endl;
       if (rank == 0) std::cout << "\tMachin: " << mach << std::endl;
+      if (rank == 0) std::cout << "Time taken for calculations: " << std::endl;
+      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << std::endl;
+      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
       break;
     }
     case 6: {
