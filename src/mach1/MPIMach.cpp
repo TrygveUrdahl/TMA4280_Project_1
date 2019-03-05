@@ -13,7 +13,7 @@ double machinMPI(double x, int i) {
 
 double MPIMachBcast(int n, int rank, int size, MPI_Comm myComm) {
   std::vector<double> values;
-  values.reserve(n);
+  values.resize(n);
   double result = 0;
 
   if (rank == 0) {
@@ -23,7 +23,7 @@ double MPIMachBcast(int n, int rank, int size, MPI_Comm myComm) {
       thisValue += 4 * machinMPI((double)1/5, i);
       thisValue +=     machinMPI((double)1/239, i);
       thisValue *= 4;
-      values.push_back(thisValue);
+      values.at(i - 1) = thisValue;
     }
   }
   MPI_Bcast(values.data(), values.size(), MPI_DOUBLE, 0, myComm);

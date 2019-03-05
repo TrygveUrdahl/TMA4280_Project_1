@@ -2,6 +2,7 @@
 #include <math.h>
 #include <mpi.h>
 #include <vector>
+#include <assert.h>
 #include "../utils.hpp"
 
 double machinMPI2(double x, int i) {
@@ -13,7 +14,7 @@ double machinMPI2(double x, int i) {
 
 double MPIMachScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
   std::vector<double> values, scattered;
-  scattered.reserve(n/size);
+  scattered.resize(n/size);
   double localResult = 0;
   double result = 0;
 
@@ -30,10 +31,13 @@ double MPIMachScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
       values.push_back(thisValue);
     }
   }
+  // Distribute data
   MPI_Scatter(values.data(),values.size()/size, MPI_DOUBLE, scattered.data(), values.size()/size, MPI_DOUBLE, 0, myComm);
+  // Do calculations on each process
   for (int i = 0; i < scattered.size(); ++i) {
     localResult += scattered.at(i);
   }
+  // Reduce all back to root
   MPI_Reduce(&localResult, &result, 1, MPI_DOUBLE, MPI_SUM, 0, myComm);
-  return result;
+  return abs(result - M_PI);
 }

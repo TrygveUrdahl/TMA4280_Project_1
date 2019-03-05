@@ -8,7 +8,7 @@
 double MPIZetaScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
   std::vector<double> values;
   std::vector<double> scattered;
-  scattered.reserve(n/size);
+  scattered.resize(n/size);
   double localResult = 0;
   double result;
 
@@ -18,7 +18,7 @@ double MPIZetaScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
   if (rank == 0) {
     // Fill values-vector with values from Riemann Zeta
     for (int i = 1; i <= n; ++i) {
-      double value = sqrt(6.0/static_cast<double>(pow(i, 2)));
+      double value = 6.0/static_cast<double>(pow(i, 2));
       values.push_back(value);
     }
   }
@@ -31,5 +31,5 @@ double MPIZetaScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
   }
 
   MPI_Reduce(&localResult, &result, 1, MPI_DOUBLE, MPI_SUM, 0, myComm);
-  return result;
+  return abs(sqrt(result) - M_PI);
 }

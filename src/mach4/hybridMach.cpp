@@ -14,8 +14,10 @@ inline double machinHybrid(double x, int i) {
 }
 
 double hybridMach(int n, int rank, int size, MPI_Comm myComm) {
-  std::vector<double> values, scattered;
-  scattered.reserve(n/size);
+  std::vector<double> values;
+  std::vector<double> scattered;
+  scattered.resize(n/size);
+  values.resize(n);
   double localResult = 0;
   double result = 0;
 
@@ -25,20 +27,23 @@ double hybridMach(int n, int rank, int size, MPI_Comm myComm) {
   if (rank == 0) {
     // Fill values-vector with values from Machin
     #pragma omp parallel for schedule(static)
-    for (int i = 1; i <= n; ++i) {
+    for (int i = 0; i < n; ++i) {
       double thisValue = 0;
-      thisValue += 4 * machinHybrid((double)1/5, i);
-      thisValue +=     machinHybrid((double)1/239, i);
+      thisValue += 4 * machinHybrid((double)1/5, i + 1);
+      thisValue +=     machinHybrid((double)1/239, i + 1);
       thisValue *= 4;
-      values.push_back(thisValue);
+      values.at(i) = thisValue;
     }
   }
+
   MPI_Scatter(values.data(),values.size()/size, MPI_DOUBLE, scattered.data(), values.size()/size, MPI_DOUBLE, 0, myComm);
 
   #pragma omp parallel for reduction(+:localResult) schedule(static)
   for (int i = 0; i < scattered.size(); ++i) {
     localResult += scattered.at(i);
   }
+
   MPI_Reduce(&localResult, &result, 1, MPI_DOUBLE, MPI_SUM, 0, myComm);
+
   return result;
 }

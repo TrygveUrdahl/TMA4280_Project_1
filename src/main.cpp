@@ -3,6 +3,7 @@
 #include <vector>
 #include <chrono>
 
+#include "utils.hpp"
 #include "zeta0/serialZeta.hpp"
 #include "mach0/serialMach.hpp"
 #include "zeta1/MPIZeta.hpp"
@@ -89,10 +90,64 @@ int main(int argc, char** argv) {
       double zeta, mach;
       if (rank == 0) std::cout << "Simple parallel implementation of Zeta and Machin using MPI Scatter and Reduce" << std::endl;
       auto startTimeMach = std::chrono::high_resolution_clock::now();
-      zeta = MPIMachScatterReduce(n, rank, size, myComm);
+      mach = MPIMachScatterReduce(n, rank, size, myComm);
       auto endTimeMach = std::chrono::high_resolution_clock::now();
       auto startTimeZeta = std::chrono::high_resolution_clock::now();
-      mach = MPIZetaScatterReduce(n, rank, size, myComm);
+      zeta = MPIZetaScatterReduce(n, rank, size, myComm);
+      auto endTimeZeta = std::chrono::high_resolution_clock::now();
+
+      std::chrono::duration<double> durationMach = endTimeMach - startTimeMach;
+      std::chrono::duration<double> durationZeta = endTimeZeta - startTimeZeta;
+
+      if (rank == 0) std::cout << "Returned values for absolute error in Pi: " << std::endl;
+      if (rank == 0) std::cout << "\tZeta: " << zeta << std::endl;
+      if (rank == 0) std::cout << "\tMachin: " << mach << std::endl;
+      if (rank == 0) std::cout << "Time taken for calculations: " << std::endl;
+      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << std::endl;
+      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
+
+
+      // Multiple error calculations and timings here, with priting to files
+      std::vector<double> errorsMach, errorsZeta, timingsMach, timingsZeta;
+      for (int iterations = 1; iterations <= 500; iterations++) {
+        auto startTimeMach = std::chrono::high_resolution_clock::now();
+        double errorMach = MPIMachScatterReduce(iterations, rank, size, myComm);
+        auto endTimeMach = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> durationMach = endTimeMach - startTimeMach;
+        errorsMach.push_back(errorMach);
+        timingsMach.push_back(durationMach.count()*1000000);
+
+        auto startTimeZeta = std::chrono::high_resolution_clock::now();
+        double errorZeta = MPIZetaScatterReduce(iterations, rank, size, myComm);
+        auto endTimeZeta = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> durationZeta = endTimeZeta - startTimeZeta;
+        errorsZeta.push_back(errorZeta);
+        timingsZeta.push_back(durationZeta.count()*1000000);
+      }
+      //writeVectorToFile(errorsMach, "../output/errorMach.txt");
+      //writeVectorToFile(errorsZeta, "../output/errorZeta.txt");
+      writeVectorToFile(timingsMach, "../output/timingMach.txt");
+      writeVectorToFile(timingsZeta, "../output/timingZeta.txt");
+
+      if (rank == 0) std::cout << "Error vectors calculated and output. " << std::endl;
+
+
+      break;
+    }
+    case 6: {
+      if (rank == 0) std::cout << "Question 6: " << std::endl;
+      if (rank == 0) std::cout << "No calculations done. " << std::endl;
+      break;
+    }
+    case 7: {
+      if (rank == 0) std::cout << "Question 7: " << std::endl;
+      double zeta, mach;
+      if (rank == 0) std::cout << "OpenMP implementation of Zeta and Machin. " << std::endl;
+      auto startTimeMach = std::chrono::high_resolution_clock::now();
+      mach = ompMach(n);
+      auto endTimeMach = std::chrono::high_resolution_clock::now();
+      auto startTimeZeta = std::chrono::high_resolution_clock::now();
+      zeta = ompZeta(n);
       auto endTimeZeta = std::chrono::high_resolution_clock::now();
 
       std::chrono::duration<double> durationMach = endTimeMach - startTimeMach;
@@ -106,31 +161,27 @@ int main(int argc, char** argv) {
       if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
       break;
     }
-    case 6: {
-      if (rank == 0) std::cout << "Question 6: " << std::endl;
-      if (rank == 0) std::cout << "No calculations done. " << std::endl;
-      break;
-    }
-    case 7: {
-      if (rank == 0) std::cout << "Question 7: " << std::endl;
-      double zeta, mach;
-      if (rank == 0) std::cout << "OpenMP implementation of Zeta and Machin. " << std::endl;
-      zeta = ompZeta(n);
-      mach = ompMach(n);
-      if (rank == 0) std::cout << "Returned values for Pi: " << std::endl;
-      if (rank == 0) std::cout << "\tZeta: " << zeta << std::endl;
-      if (rank == 0) std::cout << "\tMachin: " << mach << std::endl;
-      break;
-    }
     case 8: {
       if (rank == 0) std::cout << "Question 8: " << std::endl;
       double zeta, mach;
       if (rank == 0) std::cout << "Hybrid implementation of Zeta and Machin with MPI and OpenMP. " << std::endl;
-      zeta = hybridZeta(n, rank, size, myComm);
+      auto startTimeMach = std::chrono::high_resolution_clock::now();
       mach = hybridMach(n, rank, size, myComm);
+      auto endTimeMach = std::chrono::high_resolution_clock::now();
+      auto startTimeZeta = std::chrono::high_resolution_clock::now();
+      zeta = hybridZeta(n, rank, size, myComm);
+      auto endTimeZeta = std::chrono::high_resolution_clock::now();
+
+      std::chrono::duration<double> durationMach = endTimeMach - startTimeMach;
+      std::chrono::duration<double> durationZeta = endTimeZeta - startTimeZeta;
+
       if (rank == 0) std::cout << "Returned values for Pi: " << std::endl;
       if (rank == 0) std::cout << "\tZeta: " << zeta << std::endl;
       if (rank == 0) std::cout << "\tMachin: " << mach << std::endl;
+      if (rank == 0) std::cout << "Time taken for calculations: " << std::endl;
+      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << std::endl;
+      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
+
       break;
     }
     case 9: {
@@ -141,12 +192,6 @@ int main(int argc, char** argv) {
     case 10: {
       if (rank == 0) std::cout << "Question 10: " << std::endl;
       if (rank == 0) std::cout << "No calculations done. " << std::endl;
-      break;
-    }
-    case 99: { // Test case
-      double val =  MPIZetaScatterReduce(n, rank, size, myComm);
-      std::cout << "Rank: "<< rank <<". MPIZetaScatterReduce: " << val << std::endl;
-
       break;
     }
     default: {
