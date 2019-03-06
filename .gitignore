@@ -4,5 +4,9 @@
 build/*
 !build/.gitinclude
 
+#Exclude output files
 output/*
 !output/.gitinclude
+
+# Exclude all images exported
+*.png
