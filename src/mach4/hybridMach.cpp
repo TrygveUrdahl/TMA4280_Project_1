@@ -3,15 +3,8 @@
 #include <vector>
 #include <mpi.h>
 #include <assert.h>
-//#include <omp.h>
+#include <omp.h>
 #include "../utils.hpp"
-
-inline double machinHybrid(double x, int i) {
-  double result = 1;
-  result *= pow(x, 2 * i - 1)/(2 * i - 1);
-  result *= pow(-1, i - 1);
-  return result;
-}
 
 double hybridMach(int n, int rank, int size, MPI_Comm myComm) {
   std::vector<double> values;
@@ -29,8 +22,8 @@ double hybridMach(int n, int rank, int size, MPI_Comm myComm) {
     #pragma omp parallel for schedule(static)
     for (int i = 0; i < n; ++i) {
       double thisValue = 0;
-      thisValue += 4 * machinHybrid((double)1/5, i + 1);
-      thisValue +=     machinHybrid((double)1/239, i + 1);
+      thisValue += 4 * machin((double)1/5, i + 1);
+      thisValue +=     machin((double)1/239, i + 1);
       thisValue *= 4;
       values.at(i) = thisValue;
     }

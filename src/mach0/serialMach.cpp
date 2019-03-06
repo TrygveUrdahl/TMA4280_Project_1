@@ -3,12 +3,9 @@
 #include <vector>
 #include "../utils.hpp"
 
-double machin(double x, int i) {
-  double result = 1;
-  result *= pow(x, 2 * i - 1)/(2 * i - 1);
-  result *= pow(-1, i - 1);
-  return result;
-}
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif
 
 double serialMach(int n) {
   double result = 0;

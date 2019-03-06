@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <math.h>
 
 // Helper-function to write largest cluster to file.
 // Inputs
@@ -20,4 +21,11 @@ void writeVectorToFile(std::vector<double> &theVector, std::string filename = ".
     file << elem << std::endl;
   }
   file.close();
+}
+
+double machin(double x, int i) {
+  double result = 1;
+  result *= pow(x, 2 * i - 1)/(2 * i - 1);
+  result *= pow(-1, i - 1);
+  return result;
 }

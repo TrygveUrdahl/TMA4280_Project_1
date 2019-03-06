@@ -5,12 +5,9 @@
 #include <assert.h>
 #include "../utils.hpp"
 
-double machinMPI2(double x, int i) {
-  double result = 1;
-  result *= pow(x, 2 * i - 1)/(2 * i - 1);
-  result *= pow(-1, i - 1);
-  return result;
-}
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif
 
 double MPIMachScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
   std::vector<double> values, scattered;
@@ -25,8 +22,8 @@ double MPIMachScatterReduce(int n, int rank, int size, MPI_Comm myComm) {
     // Fill values-vector with values from Machin
     for (int i = 1; i <= n; ++i) {
       double thisValue = 0;
-      thisValue += 4 * machinMPI2((double)1/5, i);
-      thisValue +=     machinMPI2((double)1/239, i);
+      thisValue += 4 * machin((double)1/5, i);
+      thisValue +=     machin((double)1/239, i);
       thisValue *= 4;
       values.push_back(thisValue);
     }

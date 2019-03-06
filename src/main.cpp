@@ -2,6 +2,7 @@
 #include <mpi.h>
 #include <vector>
 #include <chrono>
+#include <omp.h>
 
 #include "utils.hpp"
 #include "zeta0/serialZeta.hpp"
@@ -14,6 +15,10 @@
 #include "mach3/ompMach.hpp"
 #include "zeta4/hybridZeta.hpp"
 #include "mach4/hybridMach.hpp"
+
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif
 
 int main(int argc, char** argv) {
   MPI_Init(&argc, &argv);
@@ -124,8 +129,8 @@ int main(int argc, char** argv) {
         errorsZeta.push_back(errorZeta);
         timingsZeta.push_back(durationZeta.count()*1000000);
       }
-      //writeVectorToFile(errorsMach, "../output/errorMach.txt");
-      //writeVectorToFile(errorsZeta, "../output/errorZeta.txt");
+      writeVectorToFile(errorsMach, "../output/errorMach.txt");
+      writeVectorToFile(errorsZeta, "../output/errorZeta.txt");
       writeVectorToFile(timingsMach, "../output/timingMach.txt");
       writeVectorToFile(timingsZeta, "../output/timingZeta.txt");
 
@@ -159,6 +164,33 @@ int main(int argc, char** argv) {
       if (rank == 0) std::cout << "Time taken for calculations: " << std::endl;
       if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << std::endl;
       if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
+
+
+      // Multiple error calculations and timings here, with priting to files
+      std::vector<double> errorsMach, errorsZeta, timingsMach, timingsZeta;
+      for (int iterations = 1; iterations <= 1000; iterations++) {
+        auto startTimeMach = std::chrono::high_resolution_clock::now();
+        double errorMach = ompMach(iterations);
+        auto endTimeMach = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> durationMach = endTimeMach - startTimeMach;
+        errorsMach.push_back(errorMach);
+        timingsMach.push_back(durationMach.count()*1000000);
+
+        auto startTimeZeta = std::chrono::high_resolution_clock::now();
+        double errorZeta = ompZeta(iterations);
+        auto endTimeZeta = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> durationZeta = endTimeZeta - startTimeZeta;
+        errorsZeta.push_back(errorZeta);
+        timingsZeta.push_back(durationZeta.count()*1000000);
+      }
+      writeVectorToFile(errorsMach, "../output/errorMach.txt");
+      writeVectorToFile(errorsZeta, "../output/errorZeta.txt");
+      writeVectorToFile(timingsMach, "../output/timingMach.txt");
+      writeVectorToFile(timingsZeta, "../output/timingZeta.txt");
+
+      if (rank == 0) std::cout << "Error vectors calculated and output. " << std::endl;
+      if (rank == 0) std::cout << "Number of threads (openMP, maximum): " << omp_get_max_threads() << std::endl;
+
       break;
     }
     case 8: {

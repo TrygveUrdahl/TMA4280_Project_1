@@ -1,8 +1,12 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
-//#include <omp.h>
+#include <omp.h>
 #include "../utils.hpp"
+
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif
 
 double ompZeta(int n) {
   double result = 0;
@@ -11,5 +15,5 @@ double ompZeta(int n) {
     result += 1.0/static_cast<double>(pow(i, 2));
   }
   result *= 6;
-  return sqrt(result);
+  return abs(sqrt(result) - M_PI);
 }

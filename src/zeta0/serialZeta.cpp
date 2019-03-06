@@ -3,6 +3,10 @@
 #include <vector>
 #include "../utils.hpp"
 
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif
+
 double serialZeta(int n) {
   double result = 0;
   for (int i = 1; i <= n; ++i) {
