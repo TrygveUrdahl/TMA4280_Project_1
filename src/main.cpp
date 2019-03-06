@@ -108,8 +108,8 @@ int main(int argc, char** argv) {
       if (rank == 0) std::cout << "\tZeta: " << zeta << std::endl;
       if (rank == 0) std::cout << "\tMachin: " << mach << std::endl;
       if (rank == 0) std::cout << "Time taken for calculations: " << std::endl;
-      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << std::endl;
-      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
+      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << " s. " << std::endl;
+      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << " s. " << std::endl;
 
 
       // Multiple error calculations and timings here, with priting to files
@@ -162,8 +162,8 @@ int main(int argc, char** argv) {
       if (rank == 0) std::cout << "\tZeta: " << zeta << std::endl;
       if (rank == 0) std::cout << "\tMachin: " << mach << std::endl;
       if (rank == 0) std::cout << "Time taken for calculations: " << std::endl;
-      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << std::endl;
-      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
+      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << " s. " << std::endl;
+      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << " s. " << std::endl;
 
 
       // Multiple error calculations and timings here, with priting to files
@@ -211,8 +211,8 @@ int main(int argc, char** argv) {
       if (rank == 0) std::cout << "\tZeta: " << zeta << std::endl;
       if (rank == 0) std::cout << "\tMachin: " << mach << std::endl;
       if (rank == 0) std::cout << "Time taken for calculations: " << std::endl;
-      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << std::endl;
-      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << std::endl;
+      if (rank == 0) std::cout << "\tZeta: " << durationZeta.count() << " s. " << std::endl;
+      if (rank == 0) std::cout << "\tMachin: " << durationMach.count() << " s. " << std::endl;
 
       break;
     }
